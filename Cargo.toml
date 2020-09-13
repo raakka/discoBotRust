@@ -1,0 +1,14 @@
+[package]
+name = "disco_bot_rust"
+version = "0.1.0"
+authors = ["xvi <xvi@xvisolutions.xyz>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies.serenity]
+features = ["framework", "standard_framework", "rustls_backend"]
+
+[dependencies.tokio]
+version = "0.2"
+features = ["macros"]
