@@ -30,7 +30,7 @@ impl EventHandler for Handler {
 #[tokio::main]
 async fn main() {
 	//setup function
-	let token = "";
+	let token = "NzU0NDgxNTY5MDc0NTExOTkz.X11Xtw.iIn-yE6d8686yuyVR5r1-CBSWnk";
 	
 	let mut client = Client::new(&token)
 		//only need one evnt handler
