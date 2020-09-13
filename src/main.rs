@@ -1,57 +1,45 @@
-use serenity::async_trait;
-use serenity::client::{Client, Context, EventHandler};
-use serenity::model::{
-	channel::Message,
-	gateway::Ready
+use serenity::{
+	async_trait,
+	model::{channel::Message, gateway::Ready},
+	prelude::*
 };
-use serenity::framework::standard::{
-	StandardFramework,
-	CommandResult,
-	macros::{
-		command,
-		group
-	}
-};
-
-//use std::env; 
 
 struct Handler;
 
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//This is the best shit ever we have a cool way of setting a responder yay :D
+//This is the event handler thingy that we can set other events in
+//not really sure abt commands tho seems weird...
+
 #[async_trait]
 impl EventHandler for Handler {
-    async fn message(&self, ctx: Context, msg: Message) {
-        if msg.content == "Hello XXIII" {
-            if let Err(why) = msg.channel_id.say(&ctx.http, "Yo!").await {
-                println!("Error sending message: {:?}", why);
-            }
-        }
-    }
 
-    async fn ready(&self, _: Context, ready: Ready) {
-        println!("{} is connected!", ready.user.name);
-    }
+	async fn message(&self, ctx: Context, msg: Message) { 
+		if msg.content == "My name is Zed" {
+			if let Err(whyfail) = msg.channel_id.say(&ctx.http, "fuckoff").await {
+				print!("Exploded because: {:?}", whyfail);
+			}
+		}
+	}
+
+	async fn ready(&self, _: Context, ready: Ready) {
+		print!("{:?} connected!", ready.user.name);
+	}
 }
 
 #[tokio::main]
 async fn main() {
-
-	/*let framework = StandardFramework::new()
-		.configure(|c| c
-			.with_whitespace(false)
-			.prefix("m!"))
-		.group(&GENERAL_GROUP);*/
-	//wtf commands???
-
-	let token = "need to set this as std::env::var";
-	let mut client = Client::new(token)
+	//setup function
+	let token = "";
+	
+	let mut client = Client::new(&token)
+		//only need one evnt handler
 		.event_handler(Handler)
-		//.framework(framework)
 		.await
-		.expect("Err creating client");
-
-	//we are so good at handling errors yay!	
-	if let Err(why) = client.start().await {
-		println!("{:?}", why);
+		.expect("client err");
+	
+	if let Err(whyfail) = client.start().await {
+		print!("whoops this happened {:?}", whyfail);
 	}
-}
 
+}
