@@ -17,8 +17,16 @@ use serenity::{
 
 use serenity ::prelude::*;
 use tokio::sync::Mutex;
+use postgres::{Connection, TlsMode};
 
 struct Handler;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//POSTGRES STUFF
+struct Song{
+	Link: String,
+	Votes: i32
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //This is the best shit ever we have a cool way of setting a responder yay :D
@@ -37,7 +45,7 @@ impl EventHandler for Handler {
 	}
 
 	async fn ready(&self, _: Context, ready: Ready) {
-		print!("{:?} connected!", ready.user.name);
+		println!("{:?} connected!", ready.user.name);
 	}
 }
 
@@ -47,21 +55,24 @@ async fn normal_message(_ctx: &Context, msg: &Message) {
 }
 
 #[group]
-#[commands(r)]
-struct General;
+#[prefixes ("suggest", "rec", "recommend")]
+#[description = "Commands for song suggestions: top, rand, add, remove"]
+#[commands(top, rand, add, remove, vote)]
+struct Sug;
 
 #[tokio::main]
 async fn main() {
 	//setup function
 	//dont show this on live idiot
-	let token = "NzU0NDgxNTY5MDc0NTExOTkz.X11Xtw.iIn-yE6d8686yuyVR5r1-CBSWnk";
+	//"NzU0NDgxNTY5MDc0NTExOTkz.X11Xtw.iIn-yE6d8686yuyVR5r1-CBSWnk"
+	let token ="";
 	
 	let framework = StandardFramework::new()
 		.configure(|c| c
 			.with_whitespace(true)
 			.prefix("%"))
 		.normal_message(normal_message)
-		.group(&GENERAL_GROUP);
+		.group(&SUG_GROUP);
 
 	let mut client = Client::new(&token)
 		//only need one evnt handler
@@ -76,11 +87,41 @@ async fn main() {
 
 }
 
+// all these commands need postresql support
+
 #[command]
-async fn r(ctx: &Context, msg: &Message, args: Args) -> CommandResult {
-	if let Err(whyfail) = msg.channel_id.say(&ctx.http, "This should make a spotify recomendation").await {
+async fn top(ctx: &Context, msg: &Message, args: Args) -> CommandResult {
+	if let Err(whyfail) = msg.channel_id.say(&ctx.http, "https://open.spotify.com/track/5nIu0VwPOsjkF61zfevLKh?si=JPbxvSDpRJio9CxZZ-X-ZA").await {
 		println!("Error sending message: {:?}", whyfail);
 	}
 	
 	Ok(())
 }
+
+#[command]
+async fn rand(ctx: &Context, msg: &Message, args: Args) -> CommandResult {
+	if let Err(whyfail) = msg.channel_id.say(&ctx.http, "https://open.spotify.com/track/5nIu0VwPOsjkF61zfevLKh?si=JPbxvSDpRJio9CxZZ-X-ZA").await {
+		println!("Error sending message: {:?}", whyfail);
+	}
+	
+	Ok(())
+}
+
+#[command]
+async fn add(ctx: &Context, msg: &Message, args: Args) -> CommandResult {
+	if let Err(whyfail) = msg.channel_id.say(&ctx.http, "Added null to postgresql database!").await {
+		println!("Error sending message: {:?}", whyfail);
+	}
+	
+	Ok(())
+}
+
+#[command]
+async fn remove(ctx: &Context, msg: &Message, args: Args) -> CommandResult {
+	if let Err(whyfail) = msg.channel_id.say(&ctx.http, "Removed null from postgresql database!").await {
+		println!("Error sending message: {:?}", whyfail);
+	}
+	
+	Ok(())
+}
+
