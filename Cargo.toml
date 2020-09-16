@@ -9,4 +9,8 @@ edition = "2018"
 [dependencies]
 serenity = { default-features = false, features = ["framework", "standard_framework", "client", "gateway", "rustls_backend", "model"] }
 tokio = { version = "0.2", features = ["macros"] }
-postgres = "0.17.5"
+tokio-core = "0.1"
+tokio-postgres = "0.5.5"
+futures = "0.1"
+futures-state-stream = "0.1"
+

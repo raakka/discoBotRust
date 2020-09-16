@@ -17,9 +17,17 @@ use serenity::{
 
 use serenity ::prelude::*;
 use tokio::sync::Mutex;
-extern crate postgres;
+
+extern crate futures;
+extern crate futures_state_stream;
+extern crate tokio_core;
+extern crate tokio_postgres;
+
+use futures::Future;
+use futures_state_stream::StateStream;
+use tokio_core::reactor::Core;
 //this thing has a stupid overlap with 'Client' so just use postgres::Client for db client
-use postgres::{NoTls, Error};
+use tokio_postgres::{NoTls, Error};
 use std::collections::HashMap;
 
 struct Handler;
@@ -65,6 +73,7 @@ struct Sug;
 
 #[tokio::main]
 async fn main() {
+	let connection = tokio_postgres::connect("host=localhost user=postgres", NoTls).await;
 	//setup function
 	//dont show this on live idiot
 	//"NzU0NDgxNTY5MDc0NTExOTkz.X11Xtw.iIn-yE6d8686yuyVR5r1-CBSWnk"
@@ -130,7 +139,7 @@ async fn remove(ctx: &Context, msg: &Message, args: Args) -> CommandResult {
 
 #[command]
 async fn vote(ctx: &Context, msg: &Message, args: Args) -> CommandResult {
-	if let Err(whyfail) = msg.channel_id.say(&ctx.http, "Removed null from postgresql database!").await {
+	if let Err(whyfail) = msg.channel_id.say(&ctx.http, "+1 Vote to This Song").await {
 		println!("Error sending message: {:?}", whyfail);
 	}
 	
