@@ -12,8 +12,7 @@ use serenity::{
         gateway::Ready,
         id::UserId,
         permissions::Permissions,
-    },
-    utils::{content_safe, ContentSafeOptions},
+    }
 };
 
 use serenity ::prelude::*;
@@ -54,12 +53,13 @@ struct General;
 #[tokio::main]
 async fn main() {
 	//setup function
+	//dont show this on live idiot
 	let token = "NzU0NDgxNTY5MDc0NTExOTkz.X11Xtw.iIn-yE6d8686yuyVR5r1-CBSWnk";
 	
 	let framework = StandardFramework::new()
 		.configure(|c| c
 			.with_whitespace(true)
-			.prefix("%") 
+			.prefix("%"))
 		.normal_message(normal_message)
 		.group(&GENERAL_GROUP);
 
