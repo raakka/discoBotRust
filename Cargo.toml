@@ -9,3 +9,4 @@ edition = "2018"
 [dependencies]
 serenity = { default-features = false, features = ["framework", "standard_framework", "client", "gateway", "rustls_backend", "model"] }
 tokio = { version = "0.2", features = ["macros"] }
+postgres = "0.17.5"

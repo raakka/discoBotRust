@@ -17,15 +17,18 @@ use serenity::{
 
 use serenity ::prelude::*;
 use tokio::sync::Mutex;
-use postgres::{Connection, TlsMode};
+extern crate postgres;
+//this thing has a stupid overlap with 'Client' so just use postgres::Client for db client
+use postgres::{NoTls, Error};
+use std::collections::HashMap;
 
 struct Handler;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //POSTGRES STUFF
 struct Song{
-	Link: String,
-	Votes: i32
+	link: String,
+	votes: i32
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -65,7 +68,7 @@ async fn main() {
 	//setup function
 	//dont show this on live idiot
 	//"NzU0NDgxNTY5MDc0NTExOTkz.X11Xtw.iIn-yE6d8686yuyVR5r1-CBSWnk"
-	let token ="";
+	let token = "";
 	
 	let framework = StandardFramework::new()
 		.configure(|c| c
@@ -118,6 +121,15 @@ async fn add(ctx: &Context, msg: &Message, args: Args) -> CommandResult {
 
 #[command]
 async fn remove(ctx: &Context, msg: &Message, args: Args) -> CommandResult {
+	if let Err(whyfail) = msg.channel_id.say(&ctx.http, "Removed null from postgresql database!").await {
+		println!("Error sending message: {:?}", whyfail);
+	}
+	
+	Ok(())
+}
+
+#[command]
+async fn vote(ctx: &Context, msg: &Message, args: Args) -> CommandResult {
 	if let Err(whyfail) = msg.channel_id.say(&ctx.http, "Removed null from postgresql database!").await {
 		println!("Error sending message: {:?}", whyfail);
 	}
