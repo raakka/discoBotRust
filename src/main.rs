@@ -18,6 +18,7 @@ use serenity::{
 use serenity ::prelude::*;
 use tokio::sync::Mutex;
 
+#[macro_use]
 extern crate futures;
 extern crate futures_state_stream;
 extern crate tokio_core;
@@ -26,9 +27,12 @@ extern crate tokio_postgres;
 use futures::Future;
 use futures_state_stream::StateStream;
 use tokio_core::reactor::Core;
-//this thing has a stupid overlap with 'Client' so just use postgres::Client for db client
+
+//this thing has a stupid overlap with 'Client' from discord so just use postgres::Client for db client
 use tokio_postgres::{NoTls, Error};
 use std::collections::HashMap;
+
+use std::{env, io};
 
 struct Handler;
 
@@ -40,7 +44,7 @@ struct Song{
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-//This is the best shit ever we have a cool way of setting a responder yay :D
+//This is the best thing ever we have a cool way of setting a responder yay :D
 //This is the event handler thingy that we can set other events in
 //not really sure abt commands tho seems weird...
 
@@ -49,7 +53,7 @@ impl EventHandler for Handler {
 
 	async fn message(&self, ctx: Context, msg: Message) { 
 		if msg.content == "My name is Zed" {
-			if let Err(whyfail) = msg.channel_id.say(&ctx.http, "fuckoff").await {
+			if let Err(whyfail) = msg.channel_id.say(&ctx.http, "i <3 zed").await {
 				print!("Exploded because: {:?}", whyfail);
 			}
 		}
@@ -74,10 +78,9 @@ struct Sug;
 #[tokio::main]
 async fn main() {
 	let connection = tokio_postgres::connect("host=localhost user=postgres", NoTls).await;
-	//setup function
-	//dont show this on live idiot
-	//"NzU0NDgxNTY5MDc0NTExOTkz.X11Xtw.iIn-yE6d8686yuyVR5r1-CBSWnk"
-	let token = "";
+	
+	//setup the disc client
+	let token = std::env::var("BOT_TOKEN").expect("BOT_TOKEN");
 	
 	let framework = StandardFramework::new()
 		.configure(|c| c
@@ -100,6 +103,7 @@ async fn main() {
 }
 
 // all these commands need postresql support
+//TODO: DO NOT USE DIESEL EVER PLEASE!!!!
 
 #[command]
 async fn top(ctx: &Context, msg: &Message, args: Args) -> CommandResult {

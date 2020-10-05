@@ -13,4 +13,5 @@ tokio-core = "0.1"
 tokio-postgres = "0.5.5"
 futures = "0.1"
 futures-state-stream = "0.1"
+dotenv = "0.15.0"
 
